@@ -1,90 +1,129 @@
-# S5-19 | 🏁 Entrega: KImóveis - TypeORM com Relacionamentos
+<h1 align="center">
+   User CRUD and Login
+</h1>
 
-Para inciar este projeto, é necessário instalar as dependências, que serão utilizadas nos testes. Portanto utilize o comando abaixo para instalar tais dependências:
+Project develop using NodeJS and Express to create an API where the client can create a user, update and delete its informations. The admin user can view, update and delete informations from all users. The project was made usign TypeScript, TypeORM, bcryptjs, express-async-erros, yup, jsonwebtoken, dotenv and pg. 
+URL base: <a> http://localhost:3000 </a>
 
-````
-yarn install
-````
-<br>
+## Routes: 
+**POST** /users <br>
+Route to create a new user.
 
-**Configure as variáveis de ambiente no seu .env**, passando as credenciais corretas para conectar em seu banco local
-
-
-Com isso feito, para rodar sua aplicação, basta utilizar o comando
-````
-yarn dev
-````
-
-<br>
-
-# **Sobre os testes**
-
-Essa aplicação possui testes, que serão utilizados para validar, se todas as regras de negócio foram aplicadas de maneira correta.
-
-Os testes estão localizados em `src/__tests__`.
-
-Na subpasta `integration` estão os testes.
-
-Já na subpasta `mocks` estão os dados que serão utilizados para os testes.
-
-No arquivo `jest.config.json` estão algumas configurações necessárias para os testes rodarem.
-
-**`De modo algum altere qualquer um desses arquivos.`** Isso poderá comprometer a integridade dos testes.
-
-E também não altere o script de `test` localizado no `package.json`. Isso será utilizado para rodar os testes.
-
-<br>
-
-
-# **Rodando os testes** 
-
-Para rodar os testes é necessário que no seu terminal, você esteja dentro do diretório do projeto.
-
-Estando no terminal e dentro do caminho correto, você poderá utilizar os comandos a seguir:
-
-### Rodar todos os testes
-````
-yarn test
-````
-#
-### Rodar todos os testes e ter um log ainda mais completo
-````
-yarn test --all
-````
-#
-
-### Rodar os testes de uma pasta específica
-`detalhe: repare que tests está envolvido por 2 underlines. Isso se chama dunder.`
-````
-yarn test ./scr/__tests__/integration/<subpasta>
-````
-#
-### Rodar os testes de um arquivo específico
-````
-yarn test ./scr/__tests__/integration/<subpasta>/<arquivo>
-````
-#
-### Rodar um teste específico
-````
-yarn test -t <describe ou test específico envolto em aspas>
-````
-````
-\\ ex: yarn test -t "/categories"
-\\ rodaria os testes do describe "/categorias" no caminho
-\\ ./scr/__tests__/integration/categories/categoriesRoutes.test.ts
-````
+Request format: 
+```json
+{
+  "name": "name",
+  "email": "email@mail.com",
+  "password": "1234",
+  "isAdm": "false"
+}
+```
+Response:
+```json
+201 
+{
+  "name": "name",
+  "email": "email@mail.com",
+  "isAdm": "false", 
+  "isActive": "true", 
+  "createdAt": "2022-12-16T18:17:56.659Z",
+  "UpdatedAt": "2022-12-16T18:17:56.659Z", 
+  "id": "f1fabe0f-73c9-433f-adf8-4162a6f464e2"
+}
+```
 
 <br>
 
+**POST** /login <br>
+Route to create a new session for the user.
 
-**Caso você queira verificar todas as opções de execução de testes, visite a [Documentação oficial do Jest](https://jestjs.io/docs/cli)**
+Request format: 
+```json
+{
+  "email": "email@mail.com",
+  "password": "1234",
+}
+```
+Response:
+```json
+200
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlM0BtYWlsLmNvbSIsImlhdCI6MTY3MTIyNDI2NSwiZXhwIjoxNjcxMzEwNjY1LCJzdWIiOiJiMzE2YzMxNS1kMTZjLTRlMzktODU0My1iNzkyNjk2M2E0MGMifQ.XrAfBP5JCyeshuMaguqdBnAb8OX4VAYV-5-EpcksAs8"
+}
+```
 
-Após rodar um dos comandos aparecerá um log no seu terminal, contendo as informações da execução do teste.
+<br>
 
-**Observação:** O teste pode demorar alguns segundos para ser finalizado. Quanto maior for o teste, mais tempo será consumido para a execução.
+***GET*** /users <br>
+Route to list all users. Must be admin to access.
 
-#
+Response:
+```json
+200
+[
+  {
+    "updatedAt": "2022-12-15T15:55:13.721Z",
+    "createdAt": "2022-12-15T15:55:13.721Z",
+    "isActive": true,
+    "isAdm": false,
+    "email": "teste2@mail.com",
+    "name": "teste",
+    "id": "74435643-9a21-4b84-9554-ac222b71f033"
+  },
+  {
+    "updatedAt": "2022-12-15T21:21:04.069Z",
+    "createdAt": "2022-12-15T21:21:04.069Z",
+    "isActive": true,
+    "isAdm": true,
+    "email": "teste3@mail.com",
+    "name": "teste",
+    "id": "b316c315-d16c-4e39-8543-b7926963a40c"
+  },
+  {
+    "updatedAt": "2022-12-16T00:06:06.194Z",
+    "createdAt": "2022-12-16T00:06:06.194Z",
+    "isActive": true,
+    "isAdm": true,
+    "email": "teste4@mail.com",
+    "name": "teste",
+    "id": "11bb29b4-f354-41aa-98d3-4c5aae2ec5a2"
+  }
+]
+```
+<br>
+
+***PATCH*** /users/:userId <br>
+Route to edit user information. Must be admin or owner of the resource to access. 
+
+Request format: 
+```json
+{
+  "email": "newemail@mail.com"
+}
+```
+
+Response:
+```json
+200
+{
+  "name": "name",
+  "email": "newemail@mail.com",
+  "isAdm": "false", 
+  "isActive": "true", 
+  "createdAt": "2022-12-16T18:17:56.659Z",
+  "UpdatedAt": "2022-12-16T18:17:56.659Z", 
+  "id": "f1fabe0f-73c9-433f-adf8-4162a6f464e2"
+}
+```
+
+<br>
+
+***DELETE*** /users/:userId <br>
+Route to delete user - change its atribute "isActive" to false. Must be admin do access. 
+
+Response: 
+```json
+204
+```
 
 
-
-### Agora que já sabe como iniciar o seu projeto e rodar os testes, é hora de colocar a mão no código!
