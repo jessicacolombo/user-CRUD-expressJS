@@ -3,7 +3,8 @@
 </h1>
 
 Project develop using NodeJS and Express to create an API where the client can create a user, update and delete its informations. The admin user can view, update and delete informations from all users. The project was made usign TypeScript, TypeORM, bcryptjs, express-async-erros, yup, jsonwebtoken, dotenv and pg. 
-URL base: <a> http://localhost:3000 </a>
+
+base URL: <a> http://localhost:3000 </a>
 
 ## Routes: 
 **POST** /users <br>
